@@ -3,7 +3,28 @@ import axios from "axios";
 
 const Search = () => {
   const [term, setTerm] = useState("");
+  //debounce significa esto de poner un timer para esperar el termino buscado
+  const [debouncedTerm, setDebouncedTerm] = useState(term);
   const [results, setResults] = useState([]);
+
+
+  /* 
+  Para no tener problemas con el useEffect que nos da un warning con un posible bug
+  en la utilizacion del mismo, en el momento que no se agregan todos los props o states al mismo
+  para solucionarlo se agregan todos. Pero esto genera otro bug que corresponde a volver a hacer
+  render del primer elemento (un doble render al principio), por esto se genera otro state (debounced)
+  y cuando se cambia term y pasa el tiempo adecuado se lo pasa a debounced y ese hace el get de la API
+  */
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+     setDebouncedTerm(term);
+    }, 1000);
+
+    return() =>{
+      clearTimeout(timerId);
+    };
+  }, [term]);
 
   useEffect(() => {
     //Primera manera, helper function
@@ -14,35 +35,18 @@ const Search = () => {
           list: "search",
           origin: "*",
           format: "json",
-          srsearch: term,
+          srsearch: debouncedTerm,
         },
       });
 
       setResults(data.query.search);
     };
 
-    if (term && !results.length) {
-      search();
-    } else {
-    //para no correrlo todo el tiempo esperamos que deje de tipear por 500 miliseconds
-      const timeoutId = setTimeout(() => {
-        if (term) {
-          search();
-        }
-      }, 500);
-
-      //el return se ejecuta cuando se hace un rerender y no en la primera vez.
-      // Esto permite que cancelemos el timeout previo hasta q se deje de escribir
-      return () => {
-        clearTimeout(timeoutId);
-      };
+    if(debouncedTerm) {
+    search();
     }
-
-    //Segunda manera, promise
-    /*(async () =>{
-        await axios.get();
-        })();   */
-  }, [term]);
+    
+  }, [debouncedTerm]);
 
   const renderResults = results.map((result) => {
     return (

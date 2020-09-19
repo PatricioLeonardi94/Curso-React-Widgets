@@ -1,3 +1,7 @@
+Es una aplicacion en react donde se generan 4 widgets distintos. La intension era utilizar hooks para toda la implementacion de los mismos.
+Se usan 2 apis: la de wikipedia para buscar un termino ingresado por el usuario, la de traduccion de google para traducir texto ingresado por el usuario
+Los otros dos widgets son un dropdown para utilizar particularmente useRef, y un accordion.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

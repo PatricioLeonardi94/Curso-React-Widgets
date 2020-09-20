@@ -25,7 +25,7 @@ const Convert = ({language, text}) =>{
                     params: {
                         q: debounceText,
                         target: language.value,
-                        key: 'AIzaSyCHUCmpR7cT_yDFHC98CZJy2LTms-IwDlM'
+                        key: '' //Por Seguridad saque la key de la api para buscar
                 }
             });
             
